@@ -8,8 +8,7 @@
         <artifactId>course</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-
-    <groupId>com.course.server</groupId>
+    
     <artifactId>server</artifactId>
 
     <properties>
