@@ -19,7 +19,6 @@ public class ServerGenerator {
 
     public static void main(String[] args) throws Exception {
         String module = MODULE;
-
         // 只生成配置文件中的第一个table节点
         File file = new File(generatorConfigPath);
         SAXReader reader=new SAXReader();
