@@ -35,7 +35,6 @@ public class SectionController {
     public ResponseDto save(@RequestBody SectionDto sectionDto) {
         LOG.info("sectionDto: {}", sectionDto);
         // 保存校验
-        ValidatorUtil.require(sectionDto.getId(), "ID");
         ValidatorUtil.require(sectionDto.getTitle(), "标题");
         ValidatorUtil.length(sectionDto.getTitle(), "标题", 1, 50);
         ValidatorUtil.length(sectionDto.getVideo(), "视频", 1, 200);
