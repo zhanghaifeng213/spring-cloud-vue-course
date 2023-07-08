@@ -1,10 +1,12 @@
 package com.course.business.controller.admin;
 
 import com.course.server.domain.Course;
+import com.course.server.dto.CourseCategoryDto;
 import com.course.server.dto.CourseDto;
 import com.course.server.dto.PageDto;
 import com.course.server.dto.ResponseDto;
 import com.course.server.exception.ValidatorException;
+import com.course.server.service.CourseCategoryService;
 import com.course.server.service.CourseService;
 import com.course.server.util.ValidatorUtil;
 import org.slf4j.Logger;
@@ -22,6 +24,8 @@ public class CourseController {
     public static final String BUSINESS_NAME = "课程";
     @Resource
     private CourseService courseService;
+    @Resource
+    private CourseCategoryService courseCategoryService;
     @PostMapping("/list")
     public ResponseDto course(@RequestBody PageDto pageDto) {
         LOG.info("pageDto: {}", pageDto);
@@ -50,6 +54,19 @@ public class CourseController {
         LOG.info("id: {}", id);
         ResponseDto responseDto = new ResponseDto();
         courseService.delete(id);
+        return responseDto;
+    }
+
+    /**
+     * 查找课程下所有分类
+     * @param courseId
+     * @return
+     */
+    @PostMapping("/list-category/{courseId}")
+    public ResponseDto listCategory(@PathVariable(value = "courseId") String courseId) {
+        ResponseDto responseDto = new ResponseDto();
+        List<CourseCategoryDto> courseCategoryDtos = courseCategoryService.listByCourse(courseId);
+        responseDto.setContent(courseCategoryDtos);
         return responseDto;
     }
 }
