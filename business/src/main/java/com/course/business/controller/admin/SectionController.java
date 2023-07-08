@@ -4,6 +4,7 @@ import com.course.server.domain.Section;
 import com.course.server.dto.SectionDto;
 import com.course.server.dto.PageDto;
 import com.course.server.dto.ResponseDto;
+import com.course.server.dto.SectionPageDto;
 import com.course.server.exception.ValidatorException;
 import com.course.server.service.SectionService;
 import com.course.server.util.ValidatorUtil;
@@ -23,11 +24,13 @@ public class SectionController {
     @Resource
     private SectionService sectionService;
     @PostMapping("/list")
-    public ResponseDto section(@RequestBody PageDto pageDto) {
-        LOG.info("pageDto: {}", pageDto);
+    public ResponseDto section(@RequestBody SectionPageDto sectionPageDto) {
+        LOG.info("pageDto: {}", sectionPageDto);
         ResponseDto responseDto = new ResponseDto();
-        sectionService.list(pageDto);
-        responseDto.setContent(pageDto);
+        ValidatorUtil.require(sectionPageDto.getCourseId(), "课程ID");
+        ValidatorUtil.require(sectionPageDto.getChapterId(), "章节ID");
+        sectionService.list(sectionPageDto);
+        responseDto.setContent(sectionPageDto);
         return responseDto;
     }
 
