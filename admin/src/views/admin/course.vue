@@ -23,9 +23,9 @@
         <th>时长｜单位秒</th>
         <th>价格（元）</th>
         <th>封面</th>
-        <th>级别｜ONE("1", "初级"), TWO("2", "中级"), THREE("3", "高级")</th>
-        <th>收费｜CHARGE("C", "收费"), FREE("F", "免费")</th>
-        <th>状态｜PUBLISH("P", "发布"), DRAFT("D", "草稿")</th>
+        <th>级别｜枚举[CourseLevelEnum]: ONE("1", "初级"), TWO("2", "中级"), THREE("3", "高级")</th>
+        <th>收费｜枚举[CourseChargeEnum]: CHARGE("C", "收费"), FREE("F", "免费")</th>
+        <th>状态｜枚举[CourseStatusEnum]: PUBLISH("P", "发布"), DRAFT("D", "草稿")</th>
         <th>报名数</th>
         <th>顺序</th>
         <th>操作</th>
@@ -40,9 +40,9 @@
         <td>{{course.time}}</td>
         <td>{{course.price}}</td>
         <td>{{course.image}}</td>
-        <td>{{course.level}}</td>
-        <td>{{course.charge}}</td>
-        <td>{{course.status}}</td>
+        <td>{{COURSE_LEVEL | optionKV(course.level)}}</td>
+        <td>{{COURSE_CHARGE | optionKV(course.charge)}}</td>
+        <td>{{COURSE_STATUS | optionKV(course.status)}}</td>
         <td>{{course.enroll}}</td>
         <td>{{course.sort}}</td>
       <td>
@@ -99,21 +99,27 @@
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-sm-2 control-label">级别｜ONE("1", "初级"), TWO("2", "中级"), THREE("3", "高级")</label>
+                <label class="col-sm-2 control-label">级别｜枚举[CourseLevelEnum]: ONE("1", "初级"), TWO("2", "中级"), THREE("3", "高级")</label>
                 <div class="col-sm-10">
-                  <input v-model="course.level" class="form-control">
+                  <select v-model="course.level" class="form-control">
+                    <option v-for="o in COURSE_LEVEL" v-bind:value="o.key">{{o.value}}</option>
+                  </select>
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-sm-2 control-label">收费｜CHARGE("C", "收费"), FREE("F", "免费")</label>
+                <label class="col-sm-2 control-label">收费｜枚举[CourseChargeEnum]: CHARGE("C", "收费"), FREE("F", "免费")</label>
                 <div class="col-sm-10">
-                  <input v-model="course.charge" class="form-control">
+                  <select v-model="course.charge" class="form-control">
+                    <option v-for="o in COURSE_CHARGE" v-bind:value="o.key">{{o.value}}</option>
+                  </select>
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-sm-2 control-label">状态｜PUBLISH("P", "发布"), DRAFT("D", "草稿")</label>
+                <label class="col-sm-2 control-label">状态｜枚举[CourseStatusEnum]: PUBLISH("P", "发布"), DRAFT("D", "草稿")</label>
                 <div class="col-sm-10">
-                  <input v-model="course.status" class="form-control">
+                  <select v-model="course.status" class="form-control">
+                    <option v-for="o in COURSE_STATUS" v-bind:value="o.key">{{o.value}}</option>
+                  </select>
                 </div>
               </div>
               <div class="form-group">
@@ -149,6 +155,9 @@
       return {
         course: {},
         courses: [],
+        COURSE_LEVEL: COURSE_LEVEL,
+        COURSE_CHARGE: COURSE_CHARGE,
+        COURSE_STATUS: COURSE_STATUS,
       }
     },
     mounted: function() {
