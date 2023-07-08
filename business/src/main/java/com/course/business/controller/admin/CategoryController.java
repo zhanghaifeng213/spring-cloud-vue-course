@@ -31,6 +31,14 @@ public class CategoryController {
         return responseDto;
     }
 
+    @PostMapping("/all")
+    public ResponseDto all() {
+        ResponseDto responseDto = new ResponseDto();
+        List<CategoryDto> categoryDtoList = categoryService.all();
+        responseDto.setContent(categoryDtoList);
+        return responseDto;
+    }
+
     @PostMapping("/save")
     public ResponseDto save(@RequestBody CategoryDto categoryDto) {
         LOG.info("categoryDto: {}", categoryDto);
