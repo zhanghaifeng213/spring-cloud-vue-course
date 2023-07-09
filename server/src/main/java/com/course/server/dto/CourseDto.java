@@ -53,14 +53,7 @@ public class CourseDto {
     /**
      * 创建时间
      */
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date createdAt;
-    /**
-     * 修改时间
-     */
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date updatedAt;
-    private List<CategoryDto> categorys;
+    private String teacherId;
 
     @Override
     public String toString() {
@@ -76,12 +69,30 @@ public class CourseDto {
         sb.append(", status='").append(status).append('\'');
         sb.append(", enroll=").append(enroll);
         sb.append(", sort=").append(sort);
+        sb.append(", teacherId='").append(teacherId).append('\'');
         sb.append(", createdAt=").append(createdAt);
         sb.append(", updatedAt=").append(updatedAt);
         sb.append(", categorys=").append(categorys);
         sb.append('}');
         return sb.toString();
     }
+
+    public String getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(String teacherId) {
+        this.teacherId = teacherId;
+    }
+
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date createdAt;
+    /**
+     * 修改时间
+     */
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date updatedAt;
+    private List<CategoryDto> categorys;
 
     public List<CategoryDto> getCategorys() {
         return categorys;

@@ -31,6 +31,14 @@ public class TeacherController {
         return responseDto;
     }
 
+    @PostMapping("/all")
+    public ResponseDto all() {
+        ResponseDto responseDto = new ResponseDto();
+        List<TeacherDto> teacherDtoList = teacherService.all();
+        responseDto.setContent(teacherDtoList);
+        return responseDto;
+    }
+
     @PostMapping("/save")
     public ResponseDto save(@RequestBody TeacherDto teacherDto) {
         LOG.info("teacherDto: {}", teacherDto);

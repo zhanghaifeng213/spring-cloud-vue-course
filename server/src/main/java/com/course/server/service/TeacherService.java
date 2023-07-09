@@ -1,7 +1,10 @@
 package com.course.server.service;
 
+import com.course.server.domain.Category;
+import com.course.server.domain.CategoryExample;
 import com.course.server.domain.Teacher;
 import com.course.server.domain.TeacherExample;
+import com.course.server.dto.CategoryDto;
 import com.course.server.dto.TeacherDto;
 import com.course.server.dto.PageDto;
 import com.course.server.mapper.TeacherMapper;
@@ -37,6 +40,14 @@ public class TeacherService {
             teacherDtos.add(teacherDto);
         }
         pageDto.setList(teacherDtos);
+    }
+
+    public List<TeacherDto> all() {
+        TeacherExample teacherExample = new TeacherExample();
+//        teacherExample.setOrderByClause("sort asc");
+        List<Teacher> teachers = teacherMapper.selectByExample(teacherExample);
+        List<TeacherDto> teacherDtoList = CopyUtil.copyList(teachers, TeacherDto.class);
+        return teacherDtoList;
     }
     public void save(TeacherDto teacherDto) {
         Teacher teacher = CopyUtil.copy(teacherDto, Teacher.class);
