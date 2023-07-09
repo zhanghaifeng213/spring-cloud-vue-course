@@ -21,7 +21,8 @@
         <module>server</module>
 		<module>business</module>
 		<module>generator</module>
-	</modules>
+        <module>file</module>
+    </modules>
 	<properties>
 		<java.version>1.8</java.version>
 		<spring-cloud.version>2021.0.7</spring-cloud.version>
