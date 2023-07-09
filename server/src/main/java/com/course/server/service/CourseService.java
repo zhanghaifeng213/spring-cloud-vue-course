@@ -3,10 +3,7 @@ package com.course.server.service;
 import com.course.server.domain.Course;
 import com.course.server.domain.CourseContent;
 import com.course.server.domain.CourseExample;
-import com.course.server.dto.CourseCategoryDto;
-import com.course.server.dto.CourseContentDto;
-import com.course.server.dto.CourseDto;
-import com.course.server.dto.PageDto;
+import com.course.server.dto.*;
 import com.course.server.mapper.CourseContentMapper;
 import com.course.server.mapper.CourseMapper;
 import com.course.server.mapper.my.MyCourseMapper;
@@ -68,7 +65,7 @@ public class CourseService {
             this.update(course);
         }
         // 批量保存课程分类
-        courseCategoryService.saveBatch(courseDto.getId(), courseDto.getCategorys());
+        courseCategoryService.saveBatch(course.getId(), courseDto.getCategorys());
     }
     private void insert(Course course) {
         Date now = new Date();
@@ -116,5 +113,16 @@ public class CourseService {
             i = courseContentMapper.insert(content);
         }
         return i;
+    }
+
+    @Transactional
+    public void sort(SortDto sortDto) {
+        if(sortDto.getNewSort() > sortDto.getOldSort()) {
+            myCourseMapper.moveSortsForward(sortDto);
+        }
+        if(sortDto.getNewSort() < sortDto.getOldSort()) {
+            myCourseMapper.moveSortsBackward(sortDto);
+        }
+        myCourseMapper.updateSort(sortDto);
     }
 }
