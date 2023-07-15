@@ -7,6 +7,7 @@ import com.course.server.enums.FileUseEnum;
 import com.course.server.service.FileService;
 import com.course.server.service.TestService;
 import com.course.server.util.Base64ToMultipartFile;
+import com.course.server.util.CopyUtil;
 import com.course.server.util.UuidUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,7 +76,9 @@ public class UploadController {
         ResponseDto<Object> objectResponseDto = new ResponseDto();
         fileDto.setPath(FILE_DOMAIN + path);
         objectResponseDto.setContent(fileDto);
+        LOG.info("getShardIndex", fileDto.getShardIndex(), fileDto.getShardTotal());
         if(fileDto.getShardIndex() == fileDto.getShardTotal()) {
+            LOG.info("合并开始");
             this.merge(fileDto);
         }
         return objectResponseDto;
@@ -116,6 +119,7 @@ public class UploadController {
 //        ResponseDto responseDto = new ResponseDto();
 //        return responseDto;
         System.gc();
+        Thread.sleep(100);
         // 删除分片
         LOG.info("删除分片开始");
         for (int i = 0; i < shardTotal; i++) {
@@ -125,4 +129,15 @@ public class UploadController {
             LOG.info("删除{}, {}", filePath, result ? "成功": "失败");
         }
     }
+
+    @GetMapping("/check/{key}")
+    public ResponseDto check(@PathVariable String key) {
+        LOG.info("检查上传分片开始：{}", key);
+        ResponseDto responseDto = new ResponseDto();
+        FileDto fileDto = fileService.findByKey(key);
+        responseDto.setContent(fileDto);
+        return responseDto;
+    }
+
+
 }
