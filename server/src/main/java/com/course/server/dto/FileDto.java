@@ -36,6 +36,16 @@ public class FileDto {
 
     private String key;
 
+    private String shard;
+
+    public String getShard() {
+        return shard;
+    }
+
+    public void setShard(String shard) {
+        this.shard = shard;
+    }
+
     public Integer getShardIndex() {
         return shardIndex;
     }
