@@ -77,7 +77,7 @@ public class UploadController {
         fileDto.setPath(FILE_DOMAIN + path);
         objectResponseDto.setContent(fileDto);
         LOG.info("getShardIndex", fileDto.getShardIndex(), fileDto.getShardTotal());
-        if(fileDto.getShardIndex() == fileDto.getShardTotal()) {
+        if(fileDto.getShardIndex().equals(fileDto.getShardTotal())) {
             LOG.info("合并开始");
             this.merge(fileDto);
         }
