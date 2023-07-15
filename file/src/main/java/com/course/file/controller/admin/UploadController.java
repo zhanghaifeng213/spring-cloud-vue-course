@@ -46,7 +46,8 @@ public class UploadController {
                               Integer size,
                               Integer shardIndex,
                               Integer shardSize,
-                              Integer shardTotal
+                              Integer shardTotal,
+                              String key
     ) throws IOException {
 //        LOG.info("文件上传开始：{}", shard);
 //        LOG.info(shard.getOriginalFilename());
@@ -54,7 +55,7 @@ public class UploadController {
 
         // 保存文件到本地
         FileUseEnum useEnum = FileUseEnum.getByCode(use);
-        String key = UuidUtil.getShortUuid();
+//        String key = UuidUtil.getShortUuid();
 //        String fileName = shard.getOriginalFilename();
 //        String suffix = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
 
