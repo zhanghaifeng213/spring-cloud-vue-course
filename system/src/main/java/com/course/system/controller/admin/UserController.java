@@ -2,6 +2,7 @@ package com.course.system.controller.admin;
 
 import com.course.server.domain.User;
 import com.course.server.domain.UserExample;
+import com.course.server.dto.LoginUserDto;
 import com.course.server.dto.UserDto;
 import com.course.server.dto.PageDto;
 import com.course.server.dto.ResponseDto;
@@ -64,6 +65,15 @@ public class UserController {
         ResponseDto responseDto = new ResponseDto();
         userService.savePassword(userDto);
         responseDto.setContent(userDto);
+        return responseDto;
+    }
+
+    @PostMapping("/login")
+    public ResponseDto login(@RequestBody UserDto userDto) {
+        userDto.setPassword(DigestUtils.md5DigestAsHex(userDto.getPassword().getBytes()));
+        ResponseDto responseDto = new ResponseDto();
+        LoginUserDto loginUserDto = userService.login(userDto);
+        responseDto.setContent(loginUserDto);
         return responseDto;
     }
 }
