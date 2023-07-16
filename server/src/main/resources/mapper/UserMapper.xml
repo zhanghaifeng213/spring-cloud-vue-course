@@ -170,4 +170,19 @@
     delete from user
     where id = #{id,jdbcType=CHAR}
   </delete>
+  <update id="updateByPrimaryKeySelective" parameterType="com.course.server.domain.User">
+    update user
+    <set>
+      <if test="name != null">
+        `name` = #{name, jdbcType=VARCHAR},
+      </if>
+      <if test="loginName != null">
+        `login_name` = #{loginName, jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        `password` = #{password, jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
 </mapper>

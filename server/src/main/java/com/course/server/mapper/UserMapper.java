@@ -24,4 +24,6 @@ public interface UserMapper {
     int updateByPrimaryKey(User record);
 
     int deleteByPrimaryKey(String id);
+
+    int updateByPrimaryKeySelective(User record);
 }
