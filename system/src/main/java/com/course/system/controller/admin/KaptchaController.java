@@ -33,6 +33,7 @@ public class KaptchaController {
             // 生成验证码字符串
             String createText = defaultKaptcha.createText();
             // 将生成的验证码放入会话缓存中，后续验证的时候用到
+            String id = request.getSession().getId();
             request.getSession().setAttribute(imageCodeToken, createText);
             // 使用验证码字符串生成验证码图片
             BufferedImage challenge = defaultKaptcha.createImage(createText);

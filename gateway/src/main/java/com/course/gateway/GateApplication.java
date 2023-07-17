@@ -35,8 +35,9 @@ public class GateApplication {
 
 		config.setAllowCredentials(Boolean.TRUE);
 		config.addAllowedMethod("*");
-		config.addAllowedOrigin("*");
+		config.addAllowedOrigin("http://localhost:8080");
 		config.addAllowedHeader("*");
+		config.checkOrigin(null);
 		config.setMaxAge(3600L);
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource(new PathPatternParser());
@@ -44,5 +45,4 @@ public class GateApplication {
 
 		return new CorsWebFilter(source);
 	}
-
 }
