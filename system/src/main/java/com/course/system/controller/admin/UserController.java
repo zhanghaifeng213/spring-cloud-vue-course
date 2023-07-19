@@ -1,10 +1,12 @@
 package com.course.system.controller.admin;
 
+import com.alibaba.fastjson.JSON;
 import com.course.server.domain.User;
 import com.course.server.domain.UserExample;
 import com.course.server.dto.*;
 import com.course.server.exception.ValidatorException;
 import com.course.server.service.UserService;
+import com.course.server.util.UuidUtil;
 import com.course.server.util.ValidatorUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 @RestController
@@ -76,10 +79,6 @@ public class UserController {
     public ResponseDto login(@RequestBody UserDto userDto, HttpServletRequest request, HttpServletResponse response) {
         userDto.setPassword(DigestUtils.md5DigestAsHex(userDto.getPassword().getBytes()));
         ResponseDto responseDto = new ResponseDto();
-        LoginUserDto loginUserDto = userService.login(userDto);
-        String id = request.getSession().getId();
-        request.getSession().setAttribute(Constants.LOGIN_USER, loginUserDto);
-        responseDto.setContent(loginUserDto);
         // 根据验证码token去获取缓存中的验证码，和用户输入的验证码是否一致
 //        String imageCode = (String) request.getSession().getAttribute(userDto.getImageCodeToken());
         String imageCode = (String) redisTemplate.opsForValue().get(userDto.getImageCodeToken());
@@ -97,8 +96,16 @@ public class UserController {
             return responseDto;
         } else {
             // 登录验证后，移除验证码
-            request.getSession().removeAttribute(userDto.getImageCodeToken());
+//            request.getSession().removeAttribute(userDto.getImageCodeToken());
+            redisTemplate.delete(userDto.getImageCodeToken());
         }
+        LoginUserDto loginUserDto = userService.login(userDto);
+        String token = UuidUtil.getShortUuid();
+        loginUserDto.setToken(token);
+//        String id = request.getSession().getId();
+//        request.getSession().setAttribute(Constants.LOGIN_USER, loginUserDto);
+        redisTemplate.opsForValue().set(token, JSON.toJSONString(loginUserDto), 3600, TimeUnit.SECONDS);
+        responseDto.setContent(loginUserDto);
         return responseDto;
     }
 
@@ -107,12 +114,13 @@ public class UserController {
      * @param request
      * @return
      */
-    @GetMapping("/logout")
-    public ResponseDto logout(HttpServletRequest request) {
+    @GetMapping("/logout/{token}")
+    public ResponseDto logout(@PathVariable String token, HttpServletRequest request) {
         LOG.info("用户登录开始");
         ResponseDto responseDto = new ResponseDto();
-        request.getSession().removeAttribute(Constants.LOGIN_USER);
-
+//        request.getSession().removeAttribute(Constants.LOGIN_USER);
+        redisTemplate.delete(token);
+        LOG.info("从redis中删除token：{}",token);
         return responseDto;
     }
 }
