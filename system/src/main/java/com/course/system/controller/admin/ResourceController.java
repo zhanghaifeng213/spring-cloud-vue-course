@@ -31,16 +31,15 @@ public class ResourceController {
     }
 
     @PostMapping("/save")
-    public ResponseDto save(@RequestBody ResourceDto resourceDto) {
-        LOG.info("resourceDto: {}", resourceDto);
+    public ResponseDto save(@RequestBody String jsonStr) {
+//        LOG.info("resourceDto: {}", resourceDto);
         // 保存校验
-        ValidatorUtil.require(resourceDto.getName(), "名称｜菜单或按钮");
-        ValidatorUtil.length(resourceDto.getName(), "名称｜菜单或按钮", 1, 100);
-        ValidatorUtil.length(resourceDto.getPage(), "页面路由", 1, 50);
-        ValidatorUtil.length(resourceDto.getRequest(), "请求｜接口", 1, 200);
+        ValidatorUtil.require(jsonStr, "资源");
+//        ValidatorUtil.length(resourceDto.getName(), "名称｜菜单或按钮", 1, 100);
+//        ValidatorUtil.length(resourceDto.getPage(), "页面路由", 1, 50);
+//        ValidatorUtil.length(resourceDto.getRequest(), "请求｜接口", 1, 200);
         ResponseDto responseDto = new ResponseDto();
-        resourceService.save(resourceDto);
-        responseDto.setContent(resourceDto);
+        resourceService.saveJson(jsonStr);
         return responseDto;
     }
 
