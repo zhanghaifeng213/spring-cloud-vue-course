@@ -50,4 +50,16 @@ public class ResourceController {
         resourceService.delete(id);
         return responseDto;
     }
+
+    /**
+     * 资源树查询
+     */
+    @GetMapping("/load-tree")
+    public ResponseDto loadTree() {
+        ResponseDto responseDto = new ResponseDto();
+        List<ResourceDto> resourceDtoList = resourceService.loadTree();
+        responseDto.setContent(resourceDtoList);
+        return responseDto;
+    }
+
 }
