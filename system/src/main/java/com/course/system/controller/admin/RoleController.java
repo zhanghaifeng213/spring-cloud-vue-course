@@ -61,4 +61,13 @@ public class RoleController {
         responseDto.setContent(roleDto);
         return responseDto;
     }
+
+    @GetMapping("/list-resource/{roleId}")
+    public ResponseDto listResource(@PathVariable String roleId) {
+        LOG.info("加载资源开始");
+        ResponseDto<Object> responseDto = new ResponseDto<>();
+        List<String> resourceIdList = roleService.listResource(roleId);
+        responseDto.setContent(resourceIdList);
+        return responseDto;
+    }
 }
