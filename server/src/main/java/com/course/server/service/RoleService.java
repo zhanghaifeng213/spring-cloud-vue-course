@@ -2,15 +2,19 @@ package com.course.server.service;
 
 import com.course.server.domain.Role;
 import com.course.server.domain.RoleExample;
+import com.course.server.domain.RoleResource;
+import com.course.server.domain.RoleResourceExample;
 import com.course.server.dto.RoleDto;
 import com.course.server.dto.PageDto;
 import com.course.server.mapper.RoleMapper;
+import com.course.server.mapper.RoleResourceMapper;
 import com.course.server.util.CopyUtil;
 import com.course.server.util.UuidUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -21,6 +25,9 @@ import java.util.List;
 public class RoleService {
     @Resource
     private RoleMapper roleMapper;
+
+    @Resource
+    private RoleResourceMapper roleResourceMapper;
 
     public void list(PageDto pageDto) {
         PageHelper.startPage(pageDto.getPage(), pageDto.getSize());
@@ -57,5 +64,27 @@ public class RoleService {
 
     public void delete(String id) {
         roleMapper.deleteByPrimaryKey(id);
+    }
+
+    /**
+     * 按角色保存资源
+     * @param roleDto
+     */
+    @Transactional
+    public void saveResource(RoleDto roleDto) {
+        String roleId = roleDto.getId();
+        List<String> resourceIds = roleDto.getResourceIds();
+        // 清空库中所有的当前角色下的记录
+        RoleResourceExample example = new RoleResourceExample();
+        example.createCriteria().andRoleIdEqualTo(roleId);
+        roleResourceMapper.deleteByExample(example);
+        // 没有角色资源
+        for (int i = 0; i < resourceIds.size(); i++) {
+            RoleResource roleResource = new RoleResource();
+            roleResource.setId(UuidUtil.getShortUuid());
+            roleResource.setRoleId(roleId);
+            roleResource.setResourceId(resourceIds.get(i));
+            roleResourceMapper.insert(roleResource);
+        }
     }
 }

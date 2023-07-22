@@ -52,4 +52,13 @@ public class RoleController {
         roleService.delete(id);
         return responseDto;
     }
+
+    @PostMapping("/save-resource")
+    public ResponseDto saveResource(@RequestBody RoleDto roleDto) {
+        LOG.info("保存角色资源关联开始");
+        ResponseDto<RoleDto> responseDto = new ResponseDto<>();
+        roleService.saveResource(roleDto);
+        responseDto.setContent(roleDto);
+        return responseDto;
+    }
 }
