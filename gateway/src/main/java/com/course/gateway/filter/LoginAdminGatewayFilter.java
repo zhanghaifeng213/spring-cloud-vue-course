@@ -1,5 +1,8 @@
 package com.course.gateway.filter;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -30,6 +33,7 @@ public class LoginAdminGatewayFilter implements GatewayFilter, Ordered {
         if(path.contains("/system/admin/user/login")
             || path.contains("/system/admin/user/logout")
             || path.contains("/system/admin/kaptcha")
+                || path.contains(("/system/admin/resource/load-tree"))
         ) {
             LOG.info("不需要控制台登录验证：{}", path);
             return chain.filter(exchange);
@@ -49,6 +53,27 @@ public class LoginAdminGatewayFilter implements GatewayFilter, Ordered {
             return exchange.getResponse().setComplete();
         } else {
             LOG.info("已登录：{}", object);
+
+            // 增加权限校验，gateway里没有LoginUserDto，所以全部用JSON操作
+            LOG.info("接口权限校验，请求地址：{}", path);
+            boolean exist = false;
+            JSONObject loginUserDto = JSON.parseObject(String.valueOf(object));
+            JSONArray requests = loginUserDto.getJSONArray("requests");
+            // 遍历所有【权限请求】，判断当前请求的地址是否在【权限】请求里
+            for (int i = 0, l = requests.size(); i < l; i++) {
+                String request = (String) requests.get(i);
+                if(path.contains(request)) {
+                    exist = true;
+                    break;
+                }
+            }
+            if(exist) {
+                LOG.info("权限校验通过");
+            } else {
+                LOG.info("权限校验未通过");
+                exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+                return exchange.getResponse().setComplete();
+            }
             return chain.filter(exchange);
         }
     }
